@@ -19,24 +19,15 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        User::factory(10)
-        ->has(
-            Company::factory()
-                ->count(rand(50,100))
-                ->has(
-                    Contact::factory()
-                        ->count(rand(3,7))
-                )
-            )
-            ->create();
+        User::factory()
+        ->count(10)
+        ->sequence(fn ($sequence) => [
+            'email' => 'al' . $sequence->index . '@admin.com' // easy to log in!
+        ])
+        ->has(Contact::factory()
+            ->count(rand(50,150))
+        )
+        ->create();
 
-        // Company::factory(5)
-        //     ->has(Contact::factory()->count(rand(5,10)))
-        //     ->create();
-
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
     }
 }

@@ -42,13 +42,8 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function companies()
-    {
-        return $this->hasMany(Company::class);
-    }
-
     public function contacts()
     {
-        return $this->hasManyThrough(Contact::class, Company::class);
+        return $this->hasMany(Contact::class);
     }
 }
