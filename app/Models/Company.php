@@ -10,6 +10,10 @@ class Company extends Model
 {
     use HasFactory, AddUserIdTrait;
 
+    protected $fillable = [
+        'name', 'type', 'no_of_employees'
+    ];
+
     public function contacts()
     {
         return $this->hasMany(Contact::class);

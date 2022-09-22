@@ -11,6 +11,10 @@ class Contact extends Model
 {
     use HasFactory, AddUserIdTrait;
 
+    protected $fillable = [
+        'first_name', 'last_name', 'email', 'company_id'
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);
