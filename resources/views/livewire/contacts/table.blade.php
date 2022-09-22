@@ -26,9 +26,9 @@
                     @endforelse
                   </select>
             </div>
-            <button class="btn btn-primary gap-2">
+            <a href="{{ route('contacts.create') }}" role="button" class="btn btn-primary gap-2">
                 Add new contact
-            </button>
+            </a>
         </div>
     </div>
     <table class="table table-compact w-full">

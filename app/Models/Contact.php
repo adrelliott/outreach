@@ -2,22 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\AddUserIdTrait;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Contact extends Model
 {
-    use HasFactory;
-
-    protected static function booted(): void
-    {
-        static::creating(function ($contact) {
-            if(! $contact->user_id) {
-                $contact->user_id = auth()->user()->id;
-            }
-        });
-    }
+    use HasFactory, AddUserIdTrait;
 
     public function user()
     {

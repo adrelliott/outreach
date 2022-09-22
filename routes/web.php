@@ -26,8 +26,7 @@ Route::get('/', function () {
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
-    // Route::resource('companies', CompanyController::class);
-    // Route::resource('contacts', ContactController::class);
+    Route::resource('contacts', ContactController::class)->only('create', 'show');
 });
 
 require __DIR__.'/auth.php';

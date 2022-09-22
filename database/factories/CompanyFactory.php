@@ -21,4 +21,11 @@ class CompanyFactory extends Factory
             'no_of_employees' => rand(5,25)
         ];
     }
+
+    public function addUserId($user_id)
+    {
+        return $this->state(function ($attributes) use ($user_id) {
+            return ['user_id' => $user_id];
+        });
+    }
 }

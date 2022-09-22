@@ -20,9 +20,7 @@ return new class extends Migration
             $table->integer('type')->nullable();
             $table->integer('no_of_employees')->nullable();
             $table->foreignId('industry_id')->nullable()->constrained();
-            // $table->foreignId('user_id')->constrained();
-	// LinkedInpage string
-	// website string
+            $table->foreignId('user_id')->constrained();
             $table->timestamps();
         });
     }
