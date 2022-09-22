@@ -8,11 +8,22 @@
                 <input wire:model="searchQuery" type="text" placeholder="Search..." class="input input-bordered w-full max-w-xs" />
             </div>
             <div class="">
-                <select class="select select-bordered w-full max-w-xs" >
-                    <option disabled selected>Filter by pipleline</option>
-                    <option>Pipeline 01</option>
-                    <option>Pipeline 02</option>
-                    <option>Pipeline 03</option>
+                <select wire:model="filterByPipelineId" class="select select-bordered w-full max-w-xs" >
+                    <option disabled selected value="">Filter by pipeline</option>
+                    @if ($filterByPipelineId != '')
+                        <option wire:click="$set('filterByPipelineId', '')">
+                            -- Clear the selection --
+                        </option>
+                    @endif
+                    @forelse ($pipelines as $pipeline)
+                        <option value="{{ $pipeline->id }}">
+                            {{ $pipeline->name }}
+                        </option>
+                    @empty
+                        <option>
+                            <a href="/pipelines/create">Create your first pipeline</a>
+                        </option>
+                    @endforelse
                   </select>
             </div>
             <button class="btn btn-primary gap-2">
@@ -26,6 +37,7 @@
                 <th class="text-left">Name</th> 
                 <th class="text-left">Company</th>  
                 <th class="text-left">Email</th>
+                <th class="text-left">Pipeline</th>
                 <th></th>
             </tr>
         </thead> 
@@ -33,9 +45,10 @@
         <tbody>
             @forelse($contacts as $contact)
                 <tr> 
-                    <td>{{ $contact->full_name }}</td> 
+                    <td>{{ $contact->user_id }} {{ $contact->full_name }}</td> 
                     <td>{{ Str::of($contact->company->name)->limit(20, '...') }}</td> 
                     <td>{{ $contact->email }}</td> 
+                    <td>{{ Str::of($contact->pipeline->name)->limit(20, '...') }}- {{ $contact->pipeline->id }}</td> 
                     <td>buttons</td> 
                 </tr>
             @empty

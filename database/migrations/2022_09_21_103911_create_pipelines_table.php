@@ -13,15 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('contacts', function (Blueprint $table) {
+        Schema::create('pipelines', function (Blueprint $table) {
             $table->id();
-            $table->string('first_name');
-            $table->string('last_name')->nullable();
-            $table->string('email');
-            $table->string('phone_number')->nullable();
+            $table->string('name');
+            $table->string('description')->nullable();
+            $table->integer('type')->default(1);
+            $table->string('goal')->nullable();
             $table->foreignId('user_id')->constrained();
-            $table->foreignId('company_id')->constrained();
-            $table->foreignId('pipeline_id')->nullable()->constrained();
             $table->timestamps();
         });
     }
@@ -33,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('contacts');
+        Schema::dropIfExists('pipelines');
     }
 };

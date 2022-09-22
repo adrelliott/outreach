@@ -10,6 +10,15 @@ class Contact extends Model
 {
     use HasFactory;
 
+    protected static function booted(): void
+    {
+        static::creating(function ($contact) {
+            if(! $contact->user_id) {
+                $contact->user_id = auth()->user()->id;
+            }
+        });
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -18,6 +27,11 @@ class Contact extends Model
     public function company()
     {
         return $this->belongsTo(Company::class);
+    }
+
+    public function pipeline()
+    {
+        return $this->belongsTo(Pipeline::class);
     }
 
     public function fullName(): Attribute
