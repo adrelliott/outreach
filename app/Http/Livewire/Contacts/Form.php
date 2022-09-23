@@ -4,8 +4,8 @@ namespace App\Http\Livewire\Contacts;
 
 use App\Models\Company;
 use App\Models\Contact;
+use Illuminate\Support\Collection;
 use Livewire\Component;
-use Illuminate\Support\Str;
 
 class Form extends Component
 {
@@ -13,11 +13,12 @@ class Form extends Component
 
     public $companyName = '';
 
-    public $companyMatches = null;
+    public Collection $companyMatches;
 
     public $setCompany = false;
+    
+    public $searchForMatches = true;
 
-    public bool $success = false;
 
     protected $rules = [
         'contact.first_name' => 'min:2|required',
@@ -29,6 +30,7 @@ class Form extends Component
     public function mount(Contact $contact)
     {
         $this->contact = $contact;
+        $this->clearMatches();
     }   
     
     public function render()
@@ -38,42 +40,52 @@ class Form extends Component
 
     public function save()
     {
-        $this->validate();
-
-        if(! $this->contact->company_id) {
-            $company = new Company([
-                'name' => $this->companyName,
-                'user_id' => auth()->user()->id
-            ]);
-
-            $company->save();
-            $this->contact->company_id = $company->id;
+        $this->getMatches();
+        if($this->companyMatches->count()) {
+            var_dump('condition');
         }
 
-        $this->contact->save();
-        $this->success = true;
+        // dd('got here');
 
-        return redirect()->route('contacts.show', ['contact' => $this->contact]);
+        // $this->validate();
+
+        
+
+        // if(! $this->contact->company_id) {
+        //     $company = new Company([
+        //         'name' => $this->companyName,
+        //         'user_id' => auth()->user()->id
+        //     ]);
+
+        //     $company->save();
+        //     $this->contact->company_id = $company->id;
+        // }
+
+        // $this->contact->save();
+
+        // return redirect()->route('contacts.show', ['contact' => $this->contact]);
     }
 
-    public function updatingCompanyName()
+    public function getMatches()
     {
-        if(strlen($this->companyName) >= 4) {
-            $this->companyMatches = Company::select('id', 'name')
+        if(! $this->searchForMatches) {
+            return;
+        }
+
+        // query for possible matches
+        $this->companyMatches = Company::select('id', 'name')
             ->where('user_id', auth()->user()->id)
-            ->where('name', 'like', '%' . $this->companyName . '%')
+            ->when(strlen($this->companyName) > 0, function($query) {
+                $query->where('name', 'like', '%' . $this->companyName . '%');
+            })
             ->get();
-        }
-        else {
-            $this->companyMatches = null;
-        }
     }
 
     public function setCompany(Company $company)
     {
         $this->contact->company_id = $company->id;
         $this->companyName = $company->name;
-        $this->companyMatches = null;
+        $this->clearMatches();
         $this->setCompany = true;
     }
 
@@ -82,6 +94,15 @@ class Form extends Component
         $this->contact->company_id = null;
         $this->companyName = null;
         $this->setCompany = false;
+    }
+
+    public function clearMatches($forever = false)
+    {
+        $this->companyMatches = collect([]);
+
+        if($forever) {
+            $this->searchForMatches = false;
+        }
     }
     
 
